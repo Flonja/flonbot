@@ -62,7 +62,7 @@ func main() {
 
 	if err = socket.Listen(func(message *chat.ResponseRoomMessage) {
 		msg := html.UnescapeString(message.Message)
-		if strings.HasPrefix(msg, c.Prefix) && message.UserGuid != socket.Guid() {
+		if strings.HasPrefix(msg, c.Prefix) && (message.UserGuid != socket.Guid() || c.Admin.Selfbot) {
 			args := strings.Split(strings.TrimPrefix(msg, c.Prefix), " ")
 			command := args[0]
 			args = args[1:]
@@ -94,6 +94,7 @@ type config struct {
 	Prefix string
 	Admin  struct {
 		Username       string
+		Selfbot        bool
 		ToggleCommands bool
 	}
 }
