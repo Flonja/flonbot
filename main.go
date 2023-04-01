@@ -61,7 +61,7 @@ func main() {
 
 	if err = socket.Listen(func(message *chat.ResponseRoomMessage) {
 		msg := message.Message
-		if strings.HasPrefix(msg, c.Prefix) {
+		if strings.HasPrefix(msg, c.Prefix) && message.UserGuid != socket.Guid() {
 			args := strings.Split(strings.TrimPrefix(msg, c.Prefix), " ")
 			command := args[0]
 			args = args[1:]
