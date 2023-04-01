@@ -8,6 +8,7 @@ import (
 	"github.com/flonja/sinkingchat/chat"
 	"github.com/pelletier/go-toml"
 	"github.com/zalando/go-keyring"
+	"html"
 	"log"
 	"os"
 	"strings"
@@ -60,7 +61,7 @@ func main() {
 	Register([]string{"commands", "?"}, &commands.HelpCommand{})
 
 	if err = socket.Listen(func(message *chat.ResponseRoomMessage) {
-		msg := message.Message
+		msg := html.UnescapeString(message.Message)
 		if strings.HasPrefix(msg, c.Prefix) && message.UserGuid != socket.Guid() {
 			args := strings.Split(strings.TrimPrefix(msg, c.Prefix), " ")
 			command := args[0]
@@ -80,7 +81,7 @@ func main() {
 			}
 		}
 
-		fmt.Printf("%v (self? %v): %v\n", message.Username, message.UserGuid == socket.Guid(), message.Message)
+		fmt.Printf("%v (self? %v): %v\n", message.Username, message.UserGuid == socket.Guid(), msg)
 	}); err != nil {
 		log.Fatalf("unable to listen to messages: %v", err)
 	}
