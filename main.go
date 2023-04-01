@@ -53,7 +53,7 @@ func main() {
 		Register([]string{"disable"}, &commands.DisableCommand{Admin: c.Admin.Username, Toggle: &enabledCommands})
 	}
 	Register([]string{"viewers", "pilots"}, commands.NewViewersCommand(socket))
-	Register([]string{"github", "shamelessselfpromotion"}, &commands.GithubCommand{})
+	// Not allowed by Moderators (for obvious reasons lmao): Register([]string{"github", "shamelessselfpromotion"}, &commands.GithubCommand{})
 	if wanShowCmd, err := commands.NewWanShowCommand(); err == nil {
 		Register([]string{"wanshow", "whendoeswanshowstart", "impatient"}, wanShowCmd)
 	}
@@ -99,6 +99,7 @@ type config struct {
 
 func readConfig(fileName string) (config, error) {
 	c := config{}
+	c.Prefix = "/"
 	c.Admin.ToggleCommands = true
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		data, err := toml.Marshal(c)
